@@ -15,7 +15,7 @@ provider "aws" {
 resource "aws_iam_role" "Lambda-Emailing-Role" {
   name = "Lambda-Emailing-Role"
 
-    assume_role_policy =  jsondecode({
+    assume_role_policy =  jsonencode({
         Version = "2012-10-17"
         Statement = [
     # CloudWatch Log
