@@ -12,39 +12,41 @@ provider "aws" {
 }
 
 # IAM policy/roles
-resource "aws_iam_role" "Lambda-Emailing-Role" {
-  name = "Lambda-Emailing-Role"
+#  For security best practice, I let's root account create this role
+#  In my real job it's usaully be my manager to take in charge of this task.
+# resource "aws_iam_role" "Lambda-Emailing-Role"{
+#   name = "Lambda-Emailing-Role"
 
-    assume_role_policy =  jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-    # CloudWatch Log
-    {
-    Action: [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-    ],
-    Effect: "Allow",
-    Resource: "arn:aws:logs:*:*:*"
-    },
-    # SNS
-    {
-    Action: [
-        "sns:CreateTopic",
-		"sns:Publish"
-    ],
-    Effect: "Allow",
-    Resource: "arn:aws:sns:*:123456789012:new-product-topic"
-    }
-        ]
-    })
-}
-# attach aws managed policy to custom role
-resource "aws_iam_role_policy_attachment" "s3_read_only_access" {
-  role = aws_iam_role.Lambda-Emailing-Role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-}
+#     assume_role_policy =  jsonencode({
+#         Version = "2012-10-17"
+#         Statement = [
+#     # CloudWatch Log
+#     {
+#     Action: [
+#         "logs:CreateLogGroup",
+#         "logs:CreateLogStream",
+#         "logs:PutLogEvents"
+#     ],
+#     Effect: "Allow",
+#     Resource: "arn:aws:logs:*:*:*"
+#     },
+#     # SNS
+#     {
+#     Action: [
+#         "sns:CreateTopic",
+# 		"sns:Publish"
+#     ],
+#     Effect: "Allow",
+#     Resource: "arn:aws:sns:*:123456789012:new-product-topic"
+#     }
+#         ]
+#     })
+# }
+# # attach aws managed policy to custom role
+# resource "aws_iam_role_policy_attachment" "s3_read_only_access" {
+#   role = aws_iam_role.Lambda-Emailing-Role.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+# }
 
 
 # SNS
@@ -64,12 +66,18 @@ resource "aws_sns_topic_subscription" "new-product-topic-subscription" {
 }
 
 
+# point to existing iam role for lambda function
+data "aws_iam_role" "Lambda-Emailing-Role" {
+  name = var.LAMBDA_IAM_ROLE_NAME
+  
+}
+
 # Lambda function
 resource "aws_lambda_function" "Lambda-Emailing-SNS" {
   function_name = var.FUNCTION_NAME
   handler = "lambda_function.handler"
   runtime = "python3.8"
-  role = aws_iam_role.Lambda-Emailing-Role.arn
+  role = data.aws_iam_role.Lambda-Emailing-Role.arn
 
   source_code_hash = filebase64sha256("${path.module}/../function/email-service.zip")
   filename = "${path.module}/../function/email-service.zip"

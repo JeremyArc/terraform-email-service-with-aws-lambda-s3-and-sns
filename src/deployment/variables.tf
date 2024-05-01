@@ -9,6 +9,12 @@ variable "FUNCTION_NAME" {
     default = "Lambda-Emailing-SNS"
 }
 
+# IAM role for Lambda function
+variable "LAMBDA_IAM_ROLE_NAME" {
+  type = string
+  default = "Lambda-Emailing-Role"
+}
+
 # SNS
 variable "TOPIC_NAME" {
   type = string
