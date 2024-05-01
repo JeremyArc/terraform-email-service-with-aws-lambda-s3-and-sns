@@ -71,8 +71,8 @@ resource "aws_lambda_function" "Lambda-Emailing-SNS" {
   runtime = "python3.8"
   role = aws_iam_role.Lambda-Emailing-Role.arn
 
-  source_code_hash = filebase64sha256("${path.module}../function/email-service.zip")
-  filename = "${path.module}/function/email-service.zip"
+  source_code_hash = filebase64sha256("${path.module}/../function/email-service.zip")
+  filename = "${path.module}/../function/email-service.zip"
   
   environment {
     variables = {
