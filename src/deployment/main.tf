@@ -105,6 +105,10 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     lambda_function_arn = aws_lambda_function.Lambda-Emailing-SNS.arn
     events              = ["s3:ObjectCreated:*"]
   }
+
+# wait until give permission to S3 finished
+  depends_on = [ aws_lambda_permission.allow_s3_to_invoke_lambda ]
+
 }
 
 # S3 bucket creation
