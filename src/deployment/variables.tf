@@ -8,7 +8,10 @@ variable "FUNCTION_NAME" {
     type = string
     default = "Lambda-Emailing-SNS"
 }
-
+variable "FILE_NAME" {
+    type = string
+    default = "email-service"
+}
 # IAM role for Lambda function
 variable "LAMBDA_IAM_ROLE_NAME" {
   type = string
