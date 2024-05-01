@@ -18,7 +18,7 @@ variable "TOPIC_NAME" {
 
 variable "SUBSCRIBERS" {
   type = list(string)
-  default = [ "jessada.srm@gmail.com", "test@gmail.com" ]
+  default = [ "jessada.srm@gmail.com", "jessada@skooldio.com" ]
 }
 
 # S3 bucket
