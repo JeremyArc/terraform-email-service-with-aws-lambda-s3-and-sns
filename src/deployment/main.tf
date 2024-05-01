@@ -4,6 +4,7 @@ terraform {
       source = "hashicorp/aws"
       version = "5.47.0"
     }
+    required_version = ">= 1.2.0"
   }
 }
 
@@ -43,7 +44,7 @@ resource "aws_iam_role" "Lambda-Emailing-Role" {
 # attach aws managed policy to custom role
 resource "aws_iam_role_policy_attachment" "s3_read_only_access" {
   role = aws_iam_role.Lambda-Emailing-Role.name
-  policy_arn = "arn:aws:iam:aws:policy/AmazonS3ReadOnlyAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
 
@@ -71,7 +72,7 @@ resource "aws_lambda_function" "Lambda-Emailing-SNS" {
   runtime = "python3.8"
   role = aws_iam_role.Lambda-Emailing-Role.arn
 
-  source_code_hash = filebase64sha256("${path.module}/function/email-service.zip")
+  source_code_hash = filebase64sha256("${path.module}../function/email-service.zip")
   filename = "${path.module}/function/email-service.zip"
   
   environment {
