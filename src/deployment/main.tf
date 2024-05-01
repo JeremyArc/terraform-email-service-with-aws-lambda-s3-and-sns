@@ -76,7 +76,8 @@ data "aws_iam_role" "Lambda-Emailing-Role" {
 # Lambda function
 resource "aws_lambda_function" "Lambda-Emailing-SNS" {
   function_name    = var.FUNCTION_NAME
-  handler          = "lambda_function.handler"
+  # handler is an entry point of email-service.py code when it's invoked.
+  handler          = "email-service.handler"
   runtime          = "python3.8"
   role             = data.aws_iam_role.Lambda-Emailing-Role.arn
   filename         = "${path.module}/../function/email-service.zip"
