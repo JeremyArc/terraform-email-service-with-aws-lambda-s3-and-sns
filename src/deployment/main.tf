@@ -11,43 +11,6 @@ provider "aws" {
   region = var.REGION
 }
 
-# IAM policy/roles
-#  For security best practice, I let's root account create this role
-#  In my real job it's usaully be my manager to take in charge of this task.
-# resource "aws_iam_role" "Lambda-Emailing-Role"{
-#   name = "Lambda-Emailing-Role"
-
-#     assume_role_policy =  jsonencode({
-#         Version = "2012-10-17"
-#         Statement = [
-#     # CloudWatch Log
-#     {
-#     Action: [
-#         "logs:CreateLogGroup",
-#         "logs:CreateLogStream",
-#         "logs:PutLogEvents"
-#     ],
-#     Effect: "Allow",
-#     Resource: "arn:aws:logs:*:*:*"
-#     },
-#     # SNS
-#     {
-#     Action: [
-#         "sns:CreateTopic",
-# 		"sns:Publish"
-#     ],
-#     Effect: "Allow",
-#     Resource: "arn:aws:sns:*:123456789012:new-product-topic"
-#     }
-#         ]
-#     })
-# }
-# # attach aws managed policy to custom role
-# resource "aws_iam_role_policy_attachment" "s3_read_only_access" {
-#   role = aws_iam_role.Lambda-Emailing-Role.name
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-# }
-
 
 # SNS
 # "new-product-topic" for a reference in terraform code
@@ -112,7 +75,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 # wait until give permission to S3 finished
   depends_on = [ 
       aws_s3_bucket.lambda-emailing-service, 
-      # aws_lambda_permission.allow_s3_to_invoke_lambda 
+      aws_lambda_permission.allow_s3_to_invoke_lambda 
       ]
 
 }
