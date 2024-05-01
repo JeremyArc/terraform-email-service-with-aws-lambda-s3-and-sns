@@ -89,6 +89,14 @@ resource "aws_lambda_function" "Lambda-Emailing-SNS" {
   }
 }
 
+# IAM permissions for Lambda to be invoked by S3
+resource "aws_lambda_permission" "allow_s3_to_invoke_lambda" {
+  statement_id  = "AllowS3Invoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.Lambda-Emailing-SNS.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.lambda-emailing-service.arn
+}
 
 # S3 bucket
 resource "aws_s3_bucket" "lambda-emailing-service" {
