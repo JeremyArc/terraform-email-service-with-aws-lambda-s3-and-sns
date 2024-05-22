@@ -36,7 +36,6 @@ data "aws_iam_role" "Lambda-Emailing-Role" {
 }
 
 # Lambda function
-# Lambda function
 resource "aws_lambda_function" "Lambda-Emailing-SNS" {
   function_name    = var.FUNCTION_NAME
   # handler is an entry point of email-service.py code when it's invoked.
